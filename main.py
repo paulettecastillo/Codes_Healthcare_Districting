@@ -122,4 +122,4 @@ if fixing==1:
 
 m.update()
 m.optimize(root_node_model)
-lista_a,lista_f,lista_z,final_resuls, final_performance,elapsed_time = archivos(m,sys.argv[7],start_time,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
+lista_a,lista_f,lista_z,final_resuls, final_performance,elapsed_time = archivos(m,sys.argv[7],start_time,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time,var)

@@ -2,7 +2,7 @@ from Read_Instance import *
 
 
 #Function to rescue the solution and performance.
-def archivos(m,nombre_modelo,start_time,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time): 
+def archivos(m,nombre_modelo,start_time,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time,var): 
     #Recopilamos poblacion y recursos por distrito
 
     file_solucion = f"Solution_{nombre_modelo}.txt"
@@ -57,7 +57,7 @@ def archivos(m,nombre_modelo,start_time,obj_bound_root_node,obj_value_root_node,
         else:
             gap_int = 100*(Best_UB - m._relaxValue)/Best_UB
 
-        if nombre_modelo=='MTZ_LR'or nombre_modelo=='MCFF_LR' or nombre_modelo=='SCFF1_LR' or nombre_modelo=='SCFF2_LR' or nombre_modelo=='MCF_LR' or nombre_modelo=='SHIR_LR' :
+        if var==0:
             gap_opt='-'              
         
         else:
