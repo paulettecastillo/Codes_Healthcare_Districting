@@ -581,7 +581,7 @@ def reindex_nodes(all_nodes, selected_nodes):
 
     return index_map
 
-def archivos1(m,nombre_modelo,start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time): 
+def archivos1(m,nombre_modelo,start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time,nodos_fijos): 
     #Recopilamos poblacion y recursos por distrito
 
     file_solucion = f"Solution_{nombre_modelo}_H.txt"
@@ -698,7 +698,7 @@ def archivos1(m,nombre_modelo,start_time_1,obj_bound_root_node,obj_value_root_no
             Rec_d[dis]= [sum(Sum_recd[k][i] for i in range(len(Sum_recd[k]))) for k in K]
 
                     
-        if nombre_modelo=='MCFF':
+        if nombre_modelo=='MCF':
 
             Sum_pobd={}
             Sum_recd={}
@@ -769,48 +769,6 @@ def archivos1(m,nombre_modelo,start_time_1,obj_bound_root_node,obj_value_root_no
             Pod_d[dis]=  [sum(Sum_pobd[k][i] for i in range(len(Sum_pobd[k])))for k in K]
             Rec_d[dis]= [sum(Sum_recd[k][i] for i in range(len(Sum_recd[k]))) for k in K]
         
-        if nombre_modelo=='MCF':
-
-            Sum_pobd={}
-            Sum_recd={}
-            for i in range(len(V)):
-                    Sum_pobd[i]= []
-                    Sum_recd[i]= [] 
-
-            for (i,j,k,l) in m._f.keys():
-                if m._f[i,j,k,l].x >0.0003:
-                    print('f', (i,j,k,l), m._f[i,j,k,l].x)
-
-            for (i,j) in m._x.keys():
-                if m._x[i,j].x >0.0003:
-                    print('x', (i,j), m._x[i,j].x)
-                
-            for (i,k) in m._x.keys():
-                if m._x[i,k].x >0.0003:
-                    Sum_pobd[k].append(poblacion[i])
-                    Sum_recd[k].append(recurso_c[i]) 
-             
-            lista_a={}
-            for (i,k) in m._x.keys():
-                lista_a[i,k]= m._x[i,k].x
-
-            lista_f={}
-            for (i,j,k,l) in m._f.keys():
-                lista_f[i,j,k,l]= m._f[i,j,k,l].x
-
-            lista_z={}
-            for (i,k,q,j) in m._f.keys():
-                lista_z[i,k,q,j]= m._f[i,k,q,j].x
-            
-        
-            Solution[dis, beta] = [(i, j) for i in V for j in V if m._x[i, j].x > 0.1]
-            Capacity[dis]= [(sum(Sum_pobd[k][i] for i in range(len(Sum_pobd[k])))-sum(Sum_recd[k][i] for i in range(len(Sum_recd[k])))) for k in V]
-            Pod_d[dis]=  [sum(Sum_pobd[k][i] for i in range(len(Sum_pobd[k])))for k in V]
-            Rec_d[dis]= [sum(Sum_recd[k][i] for i in range(len(Sum_recd[k]))) for k in V]
-
-            
-
-        
                 
  #----------------------------------RESCUED THE SOLUTION------------------------------------------------------------------------------------------------------------------------
 
@@ -843,6 +801,7 @@ def archivos1(m,nombre_modelo,start_time_1,obj_bound_root_node,obj_value_root_no
                 str(dis) + '\t' +
                 str(uni) + '\t' +
                 str(beta) + '\t' +
+                str(nodos_fijos) + '\t' +
                 str(m.objVal) + '\t' +
                 str(m.ObjBound) + '\t' +
                 str(gap_opt) + '\t' +
@@ -994,17 +953,13 @@ if m_heuristica.status == GRB.Status.INFEASIBLE:
     check=1
     while check==1:
         check=0
-        print(nodos_finales,'nodos en while')
         for i in nodos_finales:
             if len(nodos_finales[i]) > 1:
-                print(i,'aquiiiii')
                 nodos_finales[i].pop()
                 #check = 1
 
-        print(nodos_finales, 'nodos despues infactibilidad')
 
         arcos=symmetry_f(nodos_finales,lista_centros)
-        print(arcos,'aquiiiiiiiiiiiiiiiiiiii')
 
         for q in arcos:
             for (i,j) in arcos[q]:
@@ -1035,13 +990,13 @@ if m_heuristica.status == GRB.Status.INFEASIBLE:
 
 
         else:
-            lista_a,lista_f,lista_z,file_solucion, file_performance, elapsed_time =archivos1(m_heuristica,sys.argv[4],start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
+            nodos_fijos= sum(len(lista) for lista in nodos_finales.values())
+            lista_a,lista_f,lista_z,file_solucion, file_performance, elapsed_time =archivos1(m_heuristica,sys.argv[4],start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time,nodos_fijos)
             check=0
 
-else: 
-    print(arcos, 'aqui arcos finales')
-    print(nodos_finales,'aqui nodos finales')         
-    lista_a,lista_f,lista_z,file_solucion, file_performance,elapsed_time =archivos1(m_heuristica,sys.argv[4],start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
+else:    
+    nodos_fijos= sum(len(lista) for lista in nodos_finales.values())  
+    lista_a,lista_f,lista_z,file_solucion, file_performance,elapsed_time =archivos1(m_heuristica,sys.argv[4],start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time,nodos_fijos)
 
 
 #--------------------------We solve The model---------------------------------------------------------------------------------
