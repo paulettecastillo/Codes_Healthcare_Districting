@@ -91,6 +91,7 @@ poblacion,recurso_c,recurso_h,distancia,E,EF,c,degree,vecinos,no_vecinos,adyacen
 import models
 importlib.reload(models)
 
+#Recargamos Funcion para actualizar valores intancia 
 import functions
 importlib.reload(functions)
 
