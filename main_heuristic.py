@@ -973,7 +973,7 @@ for i in range(len(lista_centros)):
 
 start_time = time.time()
 m_heuristica.update()
-m_heuristica.optimize()
+m_heuristica.optimize(root_node2)
 
 if m_heuristica.status == GRB.Status.INFEASIBLE:
     print("INFACTIBLE")
