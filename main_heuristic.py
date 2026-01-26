@@ -4,20 +4,6 @@ import importlib
 from fixing_variables import *
 #----- funciones ejecucion---------------------------
 
-def main_clique(modelo):
-    # El nombre de la función se pasa como argumento
-    funcion_a_ejecutar = modelo
-    # Usa globals() para obtener la función por su nombre
-    if funcion_a_ejecutar in globals():
-        ejecutar= globals()[funcion_a_ejecutar]()  # Llama a la función directamente
-    return ejecutar
-
-def main_max_weight_clique(modelo,C):
-
-    funcion_a_ejecutar = modelo
-    if funcion_a_ejecutar in globals():
-        ejecutar= globals()[funcion_a_ejecutar](C)  # Llama a la función directamente
-    return ejecutar
 
 def root_node2(model, where):
     if where == GRB.Callback.MIPSOL:
@@ -1088,5 +1074,5 @@ m=sol_simetrias(m,sys.argv[8],lista_a,lista_z,lista_f)
 
 
 m.update()
-m.optimize()
+m.optimize(root_node_model)
 lista_a,lista_f,lista_z,final_resuls, final_performance,elapsed_time = archivos(m,sys.argv[8],start_time,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
