@@ -1,7 +1,7 @@
 from models import*
 from Read_Instance import *
 import importlib
-from fijacion_variables import *
+from fixing_variables import *
 #----- funciones ejecucion---------------------------
 
 def main_clique(modelo):
@@ -910,7 +910,7 @@ def sol_simetrias(m,nombre_modelo,lista_a,lista_z,lista_f):
 #----------------------------------We start the resolution problems-------------------------------------------------------------
 
 #We solve the Mximum clique problem
-m_clique= main_clique(sys.argv[4])
+m_clique=max_clique()
 
 m_clique.update()
 m_clique.optimize()
@@ -923,7 +923,7 @@ for i in V:
         clique.append(i)
 
 #We solve te maximum Weighted clique problem
-m_max_weight_clique= main_max_weight_clique(sys.argv[5],clique)
+m_max_weight_clique= max_weighted_clique(clique)
 
 m_max_weight_clique.update()
 m_max_weight_clique.optimize()
@@ -948,8 +948,8 @@ import models
 importlib.reload(models)
 
 
-import fijacion_variables
-importlib.reload(fijacion_variables)
+import fixing_variables 
+importlib.reload(fixing_variables)
 
 #------------------------------Resulvemos Heuristica-----------------------------------------------------------------------------
 
@@ -963,9 +963,7 @@ arcos=symmetry_f(nodos_finales,lista_centros)
 
 
 #--------------------------Le pasamos solucion Parcial a el modelo--------------------------------------------------------------
-m_heuristica= main(sys.argv[6],1,1)
-m_heuristica.write("modelo_nuevo.lp")
-print("Modelo guardado en modelo_nuevo.lp")
+m_heuristica= main(sys.argv[4],1,1)
 obj_bound_root_node = None
 obj_value_root_node = None
 best_Sol = 10000000000000000000
@@ -1051,23 +1049,23 @@ if m_heuristica.status == GRB.Status.INFEASIBLE:
 
 
         else:
-            lista_a,lista_f,lista_z,file_solucion, file_performance, elapsed_time =archivos1(m_heuristica,sys.argv[6],start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
+            lista_a,lista_f,lista_z,file_solucion, file_performance, elapsed_time =archivos1(m_heuristica,sys.argv[4],start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
             check=0
 
 else: 
     print(arcos, 'aqui arcos finales')
     print(nodos_finales,'aqui nodos finales')         
-    lista_a,lista_f,lista_z,file_solucion, file_performance,elapsed_time =archivos1(m_heuristica,sys.argv[6],start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
+    lista_a,lista_f,lista_z,file_solucion, file_performance,elapsed_time =archivos1(m_heuristica,sys.argv[4],start_time_1,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
 
 
 #--------------------------We solve The model---------------------------------------------------------------------------------
-var= int(sys.argv[7])
-symmetry=int(sys.argv[8])
-fixing=int(sys.argv[9])
+var= int(sys.argv[5])
+symmetry=int(sys.argv[6])
+fixing=int(sys.argv[7])
 
-m= main(sys.argv[10],var,symmetry)
+m= main(sys.argv[8],var,symmetry)
 
-nombre_modelo=sys.argv[10]
+nombre_modelo=sys.argv[8]
 tiempo_restante=3600-elapsed_time
 start_time = time.time()
 #m.setParam("OutputFlag", 0)
@@ -1086,9 +1084,9 @@ if fixing==1:
     for i in range(len(lista_centros)):
         m.addConstr(m._z['fict',i,i]==1)
 
-m=sol_simetrias(m,sys.argv[10],lista_a,lista_z,lista_f)
+m=sol_simetrias(m,sys.argv[8],lista_a,lista_z,lista_f)
 
 
 m.update()
 m.optimize()
-lista_a,lista_f,lista_z,final_resuls, final_performance,elapsed_time = archivos(m,sys.argv[10],start_time,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
+lista_a,lista_f,lista_z,final_resuls, final_performance,elapsed_time = archivos(m,sys.argv[8],start_time,obj_bound_root_node,obj_value_root_node,best_Sol,best_nodes,best_time)
