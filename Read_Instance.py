@@ -144,6 +144,11 @@ for (i, j) in E:
 
 adyacencia=pd.DataFrame(adj)
 
+primario=(sum(poblacion[i]-recurso_c[i] for i in V)/len(K))*(1-beta)
+secundario=(sum(poblacion[i]-recurso_h[i] for i in V)/len(K))*beta
+Lavg= primario + secundario
+
+
 
 #For rescue the solution
 Solution={}

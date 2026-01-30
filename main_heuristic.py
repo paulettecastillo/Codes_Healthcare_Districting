@@ -879,7 +879,6 @@ for i in V:
     if m_max_weight_clique._x[i].x==1:
         lista_centros.append(i)
 
-print('aqui lista centros', lista_centros)
 #Reindexacion de nodos del grafo 
 mapping=reindex_nodes(V,lista_centros)
 print(mapping)
@@ -904,7 +903,7 @@ print(nodos_finales, 'nodos antes infactibilidad')
 for i in nodos_finales:
     nodos_finales[i].insert(0,i)
 
-arcos=symmetry_f(nodos_finales,lista_centros)
+arcos=DFS(nodos_finales,lista_centros)
 
 
 #--------------------------Le pasamos solucion Parcial a el modelo--------------------------------------------------------------
@@ -959,7 +958,7 @@ if m_heuristica.status == GRB.Status.INFEASIBLE:
                 #check = 1
 
 
-        arcos=symmetry_f(nodos_finales,lista_centros)
+        arcos=DFS(nodos_finales,lista_centros)
 
         for q in arcos:
             for (i,j) in arcos[q]:
